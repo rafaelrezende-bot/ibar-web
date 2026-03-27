@@ -49,7 +49,57 @@ async function fetchStrapi<T>(endpoint: string): Promise<T[]> {
   return json.data;
 }
 
+export interface HeroComponent {
+  titulo: string;
+  subtitulo: string;
+  cta_texto: string;
+  cta_link: string;
+}
+
+export interface CadeiaCard {
+  nome: string;
+  descricao: string;
+  empresa_fornecedor: string;
+  cta_link: string | null;
+}
+
+export interface Stat {
+  numero: string;
+  label: string;
+}
+
+export interface CtaContato {
+  titulo: string;
+  descricao: string;
+  cta_texto: string;
+  cta_link: string;
+}
+
+export interface HomePage {
+  hero: HeroComponent;
+  empresas_titulo: string;
+  industrias_titulo: string;
+  industrias_subtitulo: string;
+  industrias_chips: string[];
+  cadeia_titulo: string;
+  cadeia_cards: CadeiaCard[];
+  numeros_titulo: string;
+  stats: Stat[];
+  depoimentos_titulo: string;
+  faq_titulo: string;
+  cta_contato: CtaContato;
+  seo_title: string;
+  seo_description: string;
+}
+
 export const getEmpresas = () => fetchStrapi<Empresa>('empresas');
 export const getIndustrias = () => fetchStrapi<Industria>('industrias');
 export const getDepoimentos = () => fetchStrapi<Depoimento>('depoimentos');
 export const getFAQs = () => fetchStrapi<FAQ>('faqs');
+
+export async function getHomePage(): Promise<HomePage> {
+  const res = await fetch(`${STRAPI_URL}/api/home-page?populate=*`);
+  if (!res.ok) throw new Error(`Strapi home-page: ${res.status}`);
+  const json = await res.json();
+  return json.data;
+}

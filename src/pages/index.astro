@@ -1,33 +1,18 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getEmpresas, getIndustrias, getDepoimentos, getFAQs } from '../lib/strapi';
+import { getEmpresas, getIndustrias, getDepoimentos, getFAQs, getHomePage } from '../lib/strapi';
 
-const [empresas, industrias, depoimentos, faqs] = await Promise.all([
+const [empresas, industrias, depoimentos, faqs, home] = await Promise.all([
   getEmpresas(),
   getIndustrias(),
   getDepoimentos(),
   getFAQs(),
+  getHomePage(),
 ]);
 
-const chips = ['Todos', 'Siderurgia', 'Cimento', 'Petroquímica', 'Agronegócio', 'Construção Civil', 'Vidro', 'Cerâmica'];
-
-const cadeiaCards = [
-  { nome: 'Mineração', desc: '43 jazidas próprias para extração de MgO, argilas, sílica e quartzo.', empresa: 'IBAR Nordeste' },
-  { nome: 'Matérias-Primas', desc: 'Beneficiamento e preparação de matérias-primas para a indústria refratária.', empresa: 'IBAR Refratários' },
-  { nome: 'Refratários Moldados', desc: 'Tijolos e peças refratárias prensadas para revestimento de equipamentos industriais.', empresa: 'IBAR Refratários' },
-  { nome: 'Refratários Monolíticos', desc: 'Concretos, argamassas e massas refratárias para aplicação in loco.', empresa: 'IBAR Refratários' },
-  { nome: 'Fibras Cerâmicas', desc: 'Mantas, módulos e peças de fibra cerâmica para isolamento em altas temperaturas.', empresa: 'Nutec IBAR' },
-  { nome: 'Isolantes Térmicos', desc: 'Lã de rocha e soluções de isolamento térmico e acústico industrial.', empresa: 'Nutec IBAR' },
-  { nome: 'Serviços Técnicos', desc: 'Instalação, manutenção e engenharia de aplicação refratária.', empresa: 'Global Service' },
-  { nome: 'Soluções Integradas', desc: 'Gestão completa de refratários: do projeto à operação assistida.', empresa: 'Grupo IBAR' },
-];
-
-const stats = [
-  { numero: '+50', label: 'Anos de experiência no mercado de refratários e minerais industriais' },
-  { numero: '+1.000', label: 'Colaboradores em unidades no Brasil e América Latina' },
-  { numero: '+20.000', label: 'Clientes atendidos em diversos setores industriais' },
-  { numero: '6', label: 'Empresas especializadas sob um grupo integrado' },
-];
+const chips = home.industrias_chips || ['Todos', 'Siderurgia', 'Cimento', 'Petroquímica', 'Agronegócio', 'Construção Civil', 'Vidro', 'Cerâmica'];
+const cadeiaCards = (home.cadeia_cards || []).map(c => ({ nome: c.nome, desc: c.descricao, empresa: c.empresa_fornecedor }));
+const stats = home.stats || [];
 
 const unsplashIndustrias: Record<string, string> = {
   'Siderurgia': 'https://images.unsplash.com/photo-1567789884554-0b844b597180?w=600',
@@ -48,7 +33,7 @@ const empresaImages = [
 ];
 ---
 
-<Layout title="Grupo IBAR — Refratários, Minerais Industriais e Soluções Técnicas">
+<Layout title={home.seo_title || 'Grupo IBAR'} description={home.seo_description}>
 
   <!-- 1. HEADER -->
   <header class="header" id="header">
@@ -83,10 +68,10 @@ const empresaImages = [
     <div class="hero__bg"></div>
     <div class="hero__overlay"></div>
     <div class="hero__content">
-      <h1 class="hero__title">Refratários, minerais industriais e soluções técnicas para siderurgia, cimento, petroquímica e agronegócio</h1>
-      <p class="hero__subtitle">O Grupo IBAR reúne seis empresas especializadas com mais de 50 anos de atuação, atendendo as maiores indústrias do Brasil e da América Latina.</p>
+      <h1 class="hero__title">{home.hero.titulo}</h1>
+      <p class="hero__subtitle">{home.hero.subtitulo}</p>
       <div class="hero__ctas">
-        <a href="#cadeia" class="btn-primary">Conheça nossas soluções</a>
+        <a href={home.hero.cta_link || '#cadeia'} class="btn-primary">{home.hero.cta_texto}</a>
         <a href="#contato" class="btn-secondary">Fale com um especialista</a>
       </div>
     </div>
@@ -94,7 +79,7 @@ const empresaImages = [
 
   <!-- 3. NOSSAS EMPRESAS -->
   <section class="empresas" id="empresas">
-    <h2 class="empresas__title">Seis empresas especializadas, um grupo integrado</h2>
+    <h2 class="empresas__title">{home.empresas_titulo}</h2>
     <div class="empresas__carousel" id="empresasCarousel">
       {[0, 1, 2].map((i) => (
         <div class={`empresa-card ${i === 1 ? 'empresa-card--center' : 'empresa-card--side'}`} data-empresa={i}>
@@ -119,8 +104,8 @@ const empresaImages = [
   <section class="industrias" id="industrias">
     <div class="container">
       <div class="industrias__header">
-        <h2 class="industrias__title">Encontre a solução ideal para sua indústria</h2>
-        <p class="industrias__subtitle">Cada setor industrial tem desafios únicos. Conheça como o Grupo IBAR atende as necessidades específicas da sua operação.</p>
+        <h2 class="industrias__title">{home.industrias_titulo}</h2>
+        <p class="industrias__subtitle">{home.industrias_subtitulo}</p>
       </div>
       <div class="industrias__grid">
         {industrias.map((ind) => (
@@ -146,7 +131,7 @@ const empresaImages = [
   <!-- 5. CADEIA PRODUTIVA -->
   <section class="cadeia" id="cadeia">
     <div class="container">
-      <h2 class="cadeia__title">Da jazida ao forno.<br/>Soluções para toda a cadeia refratária.</h2>
+      <h2 class="cadeia__title" set:html={home.cadeia_titulo.replace('. ', '.<br/>')}></h2>
       <div class="cadeia__grid">
         {cadeiaCards.map((card) => (
           <div class="cadeia-card">
@@ -158,7 +143,7 @@ const empresaImages = [
               <p class="cadeia-card__desc">{card.desc}</p>
               <a href="#" class="cadeia-card__cta">Saiba mais &rarr;</a>
               <div class="cadeia-card__divider"></div>
-              <span class="cadeia-card__empresa">Fornecido por {card.empresa}</span>
+              <span class="cadeia-card__empresa">Fornecido por {card.empresa || ''}</span>
             </div>
           </div>
         ))}
@@ -169,12 +154,12 @@ const empresaImages = [
   <!-- 6. NUMEROS -->
   <section class="numeros">
     <div class="container">
-      <h2 class="numeros__title">Mais de 50 anos de expertise em refratários e minerais industriais</h2>
+      <h2 class="numeros__title">{home.numeros_titulo}</h2>
       <div class="numeros__grid">
         {stats.map((s) => (
           <div class="numero-item">
             <div class="numero-item__value">{s.numero}</div>
-            <p class="numero-item__desc">{s.label}</p>
+            <p class="numero-item__desc">{s.label || ''}</p>
           </div>
         ))}
       </div>
@@ -184,7 +169,7 @@ const empresaImages = [
   <!-- 7. DEPOIMENTOS -->
   <section class="depoimentos">
     <div class="container">
-      <h2 class="depoimentos__title">O que nossos clientes dizem sobre o Grupo IBAR</h2>
+      <h2 class="depoimentos__title">{home.depoimentos_titulo}</h2>
     </div>
     <div class="depoimentos__track-wrapper">
       <div class="depoimentos__track">
@@ -210,7 +195,7 @@ const empresaImages = [
   <!-- 8. FAQ -->
   <section class="faq">
     <div class="faq__inner">
-      <h2 class="faq__title">Perguntas frequentes sobre refratários, minerais industriais e o Grupo IBAR</h2>
+      <h2 class="faq__title">{home.faq_titulo}</h2>
       <div class="faq__list">
         {faqs.map((faq) => (
           <div class="faq-item">
@@ -230,9 +215,9 @@ const empresaImages = [
   <!-- 9. CTA CONTATO -->
   <section class="cta-contato" id="contato">
     <div class="cta-contato__inner">
-      <h2 class="cta-contato__title">Fale com um especialista do Grupo IBAR</h2>
-      <p class="cta-contato__subtitle">Atendimento técnico especializado para siderurgia, cimento, petroquímica e agronegócio.</p>
-      <a href="#" class="btn-primary">Enviar solicitação</a>
+      <h2 class="cta-contato__title">{home.cta_contato.titulo}</h2>
+      <p class="cta-contato__subtitle">{home.cta_contato.descricao}</p>
+      <a href={home.cta_contato.cta_link || '#'} class="btn-primary">{home.cta_contato.cta_texto}</a>
     </div>
   </section>
 

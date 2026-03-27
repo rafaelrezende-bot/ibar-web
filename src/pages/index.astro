@@ -1,0 +1,523 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getEmpresas, getIndustrias, getDepoimentos, getFAQs } from '../lib/strapi';
+
+const [empresas, industrias, depoimentos, faqs] = await Promise.all([
+  getEmpresas(),
+  getIndustrias(),
+  getDepoimentos(),
+  getFAQs(),
+]);
+
+const chips = ['Todos', 'Siderurgia', 'Cimento', 'Petroquímica', 'Agronegócio', 'Construção Civil', 'Vidro', 'Cerâmica'];
+
+const cadeiaCards = [
+  { nome: 'Mineração', desc: '43 jazidas próprias para extração de MgO, argilas, sílica e quartzo.', empresa: 'IBAR Nordeste' },
+  { nome: 'Matérias-Primas', desc: 'Beneficiamento e preparação de matérias-primas para a indústria refratária.', empresa: 'IBAR Refratários' },
+  { nome: 'Refratários Moldados', desc: 'Tijolos e peças refratárias prensadas para revestimento de equipamentos industriais.', empresa: 'IBAR Refratários' },
+  { nome: 'Refratários Monolíticos', desc: 'Concretos, argamassas e massas refratárias para aplicação in loco.', empresa: 'IBAR Refratários' },
+  { nome: 'Fibras Cerâmicas', desc: 'Mantas, módulos e peças de fibra cerâmica para isolamento em altas temperaturas.', empresa: 'Nutec IBAR' },
+  { nome: 'Isolantes Térmicos', desc: 'Lã de rocha e soluções de isolamento térmico e acústico industrial.', empresa: 'Nutec IBAR' },
+  { nome: 'Serviços Técnicos', desc: 'Instalação, manutenção e engenharia de aplicação refratária.', empresa: 'Global Service' },
+  { nome: 'Soluções Integradas', desc: 'Gestão completa de refratários: do projeto à operação assistida.', empresa: 'Grupo IBAR' },
+];
+
+const stats = [
+  { numero: '+50', label: 'Anos de experiência no mercado de refratários e minerais industriais' },
+  { numero: '+1.000', label: 'Colaboradores em unidades no Brasil e América Latina' },
+  { numero: '+20.000', label: 'Clientes atendidos em diversos setores industriais' },
+  { numero: '6', label: 'Empresas especializadas sob um grupo integrado' },
+];
+
+const unsplashIndustrias: Record<string, string> = {
+  'Siderurgia': 'https://images.unsplash.com/photo-1567789884554-0b844b597180?w=600',
+  'Cimento': 'https://images.unsplash.com/photo-1590069261209-f8e9b8642343?w=600',
+  'Petroquímica': 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=600',
+  'Agronegócio': 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=600',
+  'Construção Civil': 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600',
+  'Vidro e Cerâmica': 'https://images.unsplash.com/photo-1605774337664-7a846e9cdf17?w=600',
+};
+
+const empresaImages = [
+  'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=600',
+  'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600',
+  'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=600',
+  'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600',
+  'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600',
+  'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600',
+];
+---
+
+<Layout title="Grupo IBAR — Refratários, Minerais Industriais e Soluções Técnicas">
+
+  <!-- 1. HEADER -->
+  <header class="header" id="header">
+    <a href="#" class="header__logo">IBAR</a>
+    <nav class="header__nav">
+      <a href="#sobre">Sobre o Grupo</a>
+      <a href="#empresas">Nossas empresas &#9662;</a>
+      <a href="#industrias">Indústrias &#9662;</a>
+      <a href="#cadeia">Produtos e Serviços &#9662;</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <div class="header__icons">
+      <button aria-label="Buscar"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></button>
+      <button aria-label="Idioma"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"/></svg></button>
+    </div>
+    <button class="header__menu-toggle" id="menuOpen" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+    </button>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav__close" id="menuClose" aria-label="Fechar">&times;</button>
+    <a href="#sobre">Sobre o Grupo</a>
+    <a href="#empresas">Nossas empresas</a>
+    <a href="#industrias">Indústrias</a>
+    <a href="#cadeia">Produtos e Serviços</a>
+    <a href="#contato">Contato</a>
+  </div>
+
+  <!-- 2. HERO -->
+  <section class="hero" id="sobre">
+    <div class="hero__bg"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <h1 class="hero__title">Refratários, minerais industriais e soluções técnicas para siderurgia, cimento, petroquímica e agronegócio</h1>
+      <p class="hero__subtitle">O Grupo IBAR reúne seis empresas especializadas com mais de 50 anos de atuação, atendendo as maiores indústrias do Brasil e da América Latina.</p>
+      <div class="hero__ctas">
+        <a href="#cadeia" class="btn-primary">Conheça nossas soluções</a>
+        <a href="#contato" class="btn-secondary">Fale com um especialista</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. NOSSAS EMPRESAS -->
+  <section class="empresas" id="empresas">
+    <h2 class="empresas__title">Seis empresas especializadas, um grupo integrado</h2>
+    <div class="empresas__carousel" id="empresasCarousel">
+      {[0, 1, 2].map((i) => (
+        <div class={`empresa-card ${i === 1 ? 'empresa-card--center' : 'empresa-card--side'}`} data-empresa={i}>
+          <div class="empresa-card__bg" style={`background-image:url(${empresaImages[i]});background-color:#333;background-size:cover;background-position:center;`}></div>
+          <div class="empresa-card__overlay"></div>
+          <div class="empresa-card__content">
+            <span class="empresa-card__name">{empresas[i]?.nome || ''}</span>
+            <a href="#" class="empresa-card__cta">Conheça</a>
+          </div>
+        </div>
+      ))}
+    </div>
+    <div class="empresas__nav">
+      <span class="dot dot--active" data-dot="0"></span>
+      <span class="dot dot--inactive" data-dot="1"></span>
+      <span class="dot dot--inactive" data-dot="2"></span>
+      <button class="empresas__pause" id="empresasPause" aria-label="Pausar carousel">&#10074;&#10074;</button>
+    </div>
+  </section>
+
+  <!-- 4. INDUSTRIAS -->
+  <section class="industrias" id="industrias">
+    <div class="container">
+      <div class="industrias__header">
+        <h2 class="industrias__title">Encontre a solução ideal para sua indústria</h2>
+        <p class="industrias__subtitle">Cada setor industrial tem desafios únicos. Conheça como o Grupo IBAR atende as necessidades específicas da sua operação.</p>
+      </div>
+      <div class="industrias__grid">
+        {industrias.map((ind) => (
+          <div class="industria-card">
+            <div class="industria-card__img">
+              {unsplashIndustrias[ind.nome] && <img src={unsplashIndustrias[ind.nome]} alt={ind.nome} loading="lazy" />}
+            </div>
+            <h3 class="industria-card__name">{ind.nome}</h3>
+            <p class="industria-card__desc">{ind.descricao}</p>
+            <p class="industria-card__tags">{ind.tags}</p>
+            <a href="#" class="industria-card__link">Soluções para {ind.nome} &rarr;</a>
+          </div>
+        ))}
+      </div>
+      <div class="industrias__chips">
+        {chips.map((chip, i) => (
+          <button class={`chip ${i === 0 ? 'chip--active' : ''}`}>{chip}</button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. CADEIA PRODUTIVA -->
+  <section class="cadeia" id="cadeia">
+    <div class="container">
+      <h2 class="cadeia__title">Da jazida ao forno.<br/>Soluções para toda a cadeia refratária.</h2>
+      <div class="cadeia__grid">
+        {cadeiaCards.map((card) => (
+          <div class="cadeia-card">
+            <div class="cadeia-card__img">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15"/></svg>
+            </div>
+            <div class="cadeia-card__content">
+              <span class="cadeia-card__name">{card.nome}</span>
+              <p class="cadeia-card__desc">{card.desc}</p>
+              <a href="#" class="cadeia-card__cta">Saiba mais &rarr;</a>
+              <div class="cadeia-card__divider"></div>
+              <span class="cadeia-card__empresa">Fornecido por {card.empresa}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. NUMEROS -->
+  <section class="numeros">
+    <div class="container">
+      <h2 class="numeros__title">Mais de 50 anos de expertise em refratários e minerais industriais</h2>
+      <div class="numeros__grid">
+        {stats.map((s) => (
+          <div class="numero-item">
+            <div class="numero-item__value">{s.numero}</div>
+            <p class="numero-item__desc">{s.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. DEPOIMENTOS -->
+  <section class="depoimentos">
+    <div class="container">
+      <h2 class="depoimentos__title">O que nossos clientes dizem sobre o Grupo IBAR</h2>
+    </div>
+    <div class="depoimentos__track-wrapper">
+      <div class="depoimentos__track">
+        {depoimentos.map((dep) => (
+          <div class="depoimento-card">
+            <p class="depoimento-card__text">{dep.texto}</p>
+            <div>
+              <div class="depoimento-card__author">{dep.autor}</div>
+              <div class="depoimento-card__role">{dep.cargo} — {dep.empresa}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+    <div class="depoimentos__nav">
+      <span class="dot dot--active"></span>
+      <span class="dot dot--inactive"></span>
+      <span class="dot dot--inactive"></span>
+      <span class="dot dot--inactive"></span>
+    </div>
+  </section>
+
+  <!-- 8. FAQ -->
+  <section class="faq">
+    <div class="faq__inner">
+      <h2 class="faq__title">Perguntas frequentes sobre refratários, minerais industriais e o Grupo IBAR</h2>
+      <div class="faq__list">
+        {faqs.map((faq) => (
+          <div class="faq-item">
+            <button class="faq-item__header">
+              <span class="faq-item__question">{faq.pergunta}</span>
+              <span class="faq-item__icon">+</span>
+            </button>
+            <div class="faq-item__answer">
+              <div class="faq-item__answer-inner">{faq.resposta}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. CTA CONTATO -->
+  <section class="cta-contato" id="contato">
+    <div class="cta-contato__inner">
+      <h2 class="cta-contato__title">Fale com um especialista do Grupo IBAR</h2>
+      <p class="cta-contato__subtitle">Atendimento técnico especializado para siderurgia, cimento, petroquímica e agronegócio.</p>
+      <a href="#" class="btn-primary">Enviar solicitação</a>
+    </div>
+  </section>
+
+  <!-- 10. FOOTER -->
+  <footer class="footer">
+    <div class="footer__grid">
+      <div>
+        <div class="footer__logo">IBAR</div>
+        <p class="footer__address">Rua Example, 123 - São Paulo, SP<br/>CEP 01234-567 - Brasil</p>
+      </div>
+      <div>
+        <div class="footer__col-title">Grupo IBAR</div>
+        <nav class="footer__links"><a href="#">Sobre o Grupo</a><a href="#">Nossa História</a><a href="#">Governança</a><a href="#">Carreiras</a></nav>
+      </div>
+      <div>
+        <div class="footer__col-title">Empresas</div>
+        <nav class="footer__links">
+          {empresas.map((e) => <a href="#">{e.nome}</a>)}
+        </nav>
+      </div>
+      <div>
+        <div class="footer__col-title">Produtos e Serviços</div>
+        <nav class="footer__links"><a href="#">Refratários Moldados</a><a href="#">Monolíticos</a><a href="#">Fibras Cerâmicas</a><a href="#">Isolantes</a><a href="#">Serviços Técnicos</a></nav>
+      </div>
+      <div>
+        <div class="footer__col-title">Indústrias</div>
+        <nav class="footer__links">
+          {industrias.map((i) => <a href="#">{i.nome}</a>)}
+        </nav>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span class="footer__copyright">&copy; 2026 Grupo IBAR. Todos os direitos reservados.</span>
+      <div class="footer__legal"><a href="#">Política de Privacidade</a><a href="#">Termos de Uso</a></div>
+    </div>
+  </footer>
+</Layout>
+
+<style>
+  .header{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:1000;width:calc(100% - 48px);max-width:1424px;background:rgba(0,0,0,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-radius:8px;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;transition:transform .3s,opacity .3s}
+  .header.header--hidden{transform:translateX(-50%) translateY(-120%);opacity:0}
+  .header__logo{font-size:20px;font-weight:700;color:var(--white);letter-spacing:1px}
+  .header__nav{display:flex;align-items:center;gap:32px}
+  .header__nav a{font-size:14px;font-weight:500;color:var(--white);transition:opacity .2s;white-space:nowrap}
+  .header__nav a:hover{opacity:.75}
+  .header__icons{display:flex;align-items:center;gap:16px}
+  .header__icons button{color:var(--white);display:flex;align-items:center;justify-content:center}
+  .header__icons svg{width:18px;height:18px}
+  .header__menu-toggle{display:none;color:var(--white)}
+  .header__menu-toggle svg{width:24px;height:24px}
+  .mobile-nav{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.97);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+  .mobile-nav.active{display:flex}
+  .mobile-nav a{font-size:20px;font-weight:500;color:var(--white)}
+  .mobile-nav__close{position:absolute;top:32px;right:32px;color:var(--white);font-size:32px}
+
+  .hero{position:relative;min-height:600px;display:flex;align-items:flex-end;border-radius:0 0 16px 16px;overflow:hidden;background:var(--darkest)}
+  .hero__bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1600');background-size:cover;background-position:center;background-color:var(--darkest)}
+  .hero__overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(24,18,18,.5),rgba(24,18,18,.85))}
+  .hero__content{position:relative;z-index:1;max-width:var(--max-width);width:100%;margin:0 auto;padding:64px;padding-top:120px}
+  .hero__title{font-size:40px;font-weight:700;color:var(--white);line-height:1.2;max-width:720px;margin-bottom:16px}
+  .hero__subtitle{font-size:16px;color:var(--light);line-height:1.5;max-width:600px;margin-bottom:32px}
+  .hero__ctas{display:flex;gap:16px;flex-wrap:wrap}
+
+  .empresas{background:var(--lightest);padding:64px 0}
+  .empresas__title{font-size:28px;font-weight:700;color:var(--darkest);text-align:center;margin-bottom:48px}
+  .empresas__carousel{display:flex;align-items:center;justify-content:center;gap:16px;padding:0 24px}
+  .empresa-card{position:relative;border-radius:16px;overflow:hidden;flex-shrink:0;cursor:pointer;transition:transform .3s,opacity .3s}
+  .empresa-card--side{width:330px;height:420px;opacity:.8}
+  .empresa-card--center{width:400px;height:500px;opacity:1}
+  .empresa-card__bg{position:absolute;inset:0}
+  .empresa-card__overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.7))}
+  .empresa-card__content{position:absolute;bottom:28px;left:28px;right:28px;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:12px}
+  .empresa-card__name{font-weight:700;color:var(--white)}
+  .empresa-card--side .empresa-card__name{font-size:24px}
+  .empresa-card--center .empresa-card__name{font-size:32px}
+  .empresa-card__cta{background:rgba(115,110,105,.6);font-size:14px;font-weight:500;color:var(--white);border-radius:20px;padding:10px 20px;white-space:nowrap;transition:background .2s}
+  .empresa-card__cta:hover{background:rgba(115,110,105,.85)}
+  .empresas__nav{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:32px}
+  .dot{height:8px;border-radius:4px;background:var(--light);transition:all .3s}
+  .dot--active{width:24px;background:var(--darkest)}
+  .dot--inactive{width:8px}
+  .empresas__pause{font-size:14px;font-weight:500;color:var(--dark);margin-left:12px;padding:4px 8px;border-radius:4px;transition:background .2s}
+  .empresas__pause:hover{background:rgba(0,0,0,.05)}
+
+  .industrias{background:var(--white);padding:80px 0}
+  .industrias__header{text-align:center;margin-bottom:32px}
+  .industrias__title{font-size:28px;font-weight:700;color:var(--darkest);margin-bottom:12px}
+  .industrias__subtitle{font-size:16px;color:var(--dark);line-height:1.5;max-width:640px;margin:0 auto}
+  .industrias__chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:40px}
+  .chip{background:var(--lightest);border-radius:20px;padding:8px 16px;font-size:14px;font-weight:500;color:var(--dark);transition:background .2s,color .2s;border:1px solid transparent}
+  .chip:hover,.chip--active{background:var(--darkest);color:var(--white)}
+  .industrias__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .industria-card__img{width:100%;height:180px;background:#D9D9D9;border-radius:8px;margin-bottom:16px;overflow:hidden}
+  .industria-card__img img{width:100%;height:100%;object-fit:cover}
+  .industria-card__name{font-size:22px;font-weight:600;color:var(--darkest);margin-bottom:8px}
+  .industria-card__desc{font-size:14px;color:var(--dark);line-height:1.5;margin-bottom:12px}
+  .industria-card__tags{font-size:12px;font-weight:500;color:var(--medium);margin-bottom:12px}
+  .industria-card__link{font-size:14px;font-weight:600;color:var(--darkest);text-decoration:underline;text-underline-offset:3px;transition:opacity .2s}
+  .industria-card__link:hover{opacity:.7}
+
+  .cadeia{background:var(--darkest);padding:80px 0}
+  .cadeia__title{font-size:28px;font-weight:700;color:var(--white);text-align:center;margin-bottom:48px;line-height:1.3}
+  .cadeia__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .cadeia-card{border-radius:16px;overflow:hidden;display:flex;flex-direction:column;height:366px;background:#211A1A}
+  .cadeia-card__img{height:180px;background:var(--white);display:flex;align-items:center;justify-content:center}
+  .cadeia-card__img svg{width:48px;height:48px;color:var(--medium)}
+  .cadeia-card__content{background:var(--medium);padding:20px;display:flex;flex-direction:column;gap:12px;height:186px;flex:none}
+  .cadeia-card__name{font-size:18px;font-weight:600;color:var(--white)}
+  .cadeia-card__desc{font-size:14px;color:var(--white);line-height:21px}
+  .cadeia-card__cta{font-size:14px;font-weight:600;color:var(--red);transition:opacity .2s}
+  .cadeia-card__cta:hover{opacity:.7}
+  .cadeia-card__divider{width:100%;height:1px;background:var(--white)}
+  .cadeia-card__empresa{font-size:11px;font-weight:500;color:#000}
+
+  .numeros{background:var(--darkest);padding:80px 0;border-top:1px solid var(--dark)}
+  .numeros__title{font-size:28px;font-weight:700;color:var(--white);text-align:center;margin-bottom:48px;max-width:640px;margin-left:auto;margin-right:auto}
+  .numeros__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:32px}
+  .numero-item{text-align:center}
+  .numero-item__value{font-size:56px;font-weight:700;color:var(--white);margin-bottom:8px}
+  .numero-item__desc{font-size:14px;color:var(--light);line-height:22px}
+
+  .depoimentos{background:var(--white);padding:80px 0}
+  .depoimentos__title{font-size:28px;font-weight:700;color:var(--darkest);text-align:center;margin-bottom:48px}
+  .depoimentos__track-wrapper{overflow:hidden;margin:0 -160px;padding:0 160px}
+  .depoimentos__track{display:flex;gap:24px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:8px}
+  .depoimentos__track::-webkit-scrollbar{display:none}
+  .depoimento-card{min-width:380px;max-width:380px;background:var(--white);border:1px solid var(--light);border-radius:16px;padding:32px 24px;scroll-snap-align:start;flex-shrink:0;display:flex;flex-direction:column;gap:20px}
+  .depoimento-card__text{font-size:14px;color:var(--dark);line-height:1.5;flex:1}
+  .depoimento-card__author{font-size:14px;font-weight:700;color:var(--darkest)}
+  .depoimento-card__role{font-size:12px;color:var(--medium);margin-top:2px}
+  .depoimentos__nav{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:32px}
+
+  .faq{background:var(--lightest);padding:80px 0}
+  .faq__inner{max-width:896px;margin:0 auto;padding:0 64px}
+  .faq__title{font-size:28px;font-weight:700;color:var(--darkest);text-align:center;margin-bottom:48px}
+  .faq__list{display:flex;flex-direction:column;gap:16px}
+  .faq-item{background:var(--white);border-radius:8px;overflow:hidden}
+  .faq-item__header{width:100%;display:flex;align-items:center;justify-content:space-between;padding:24px 20px;gap:16px;text-align:left}
+  .faq-item__question{font-size:16px;font-weight:500;color:var(--darkest);flex:1}
+  .faq-item__icon{font-size:24px;font-weight:500;color:var(--dark);flex-shrink:0;transition:transform .3s;line-height:1;width:24px;text-align:center}
+  .faq-item.active .faq-item__icon{transform:rotate(45deg)}
+  .faq-item__answer{max-height:0;overflow:hidden;transition:max-height .3s}
+  .faq-item.active .faq-item__answer{max-height:200px}
+  .faq-item__answer-inner{padding:0 20px 24px;font-size:14px;color:var(--dark);line-height:1.6}
+
+  .cta-contato{background:var(--darkest);padding:80px 0}
+  .cta-contato__inner{max-width:720px;margin:0 auto;text-align:center;padding:0 64px}
+  .cta-contato__title{font-size:36px;font-weight:700;color:var(--white);margin-bottom:16px}
+  .cta-contato__subtitle{font-size:18px;color:var(--light);margin-bottom:32px;line-height:1.5}
+
+  .footer{background:var(--darkest);border-top:1px solid var(--dark);padding:64px}
+  .footer__grid{max-width:var(--max-width);margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:32px}
+  .footer__logo{font-size:24px;font-weight:700;color:var(--white);margin-bottom:16px}
+  .footer__address{font-size:14px;color:var(--medium);line-height:1.5}
+  .footer__col-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:16px}
+  .footer__links{display:flex;flex-direction:column;gap:10px}
+  .footer__links a{font-size:14px;color:var(--medium);transition:color .2s}
+  .footer__links a:hover{color:var(--light)}
+  .footer__bottom{max-width:var(--max-width);margin:32px auto 0;padding-top:32px;border-top:1px solid var(--dark);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+  .footer__copyright{font-size:12px;color:var(--medium)}
+  .footer__legal{display:flex;gap:24px}
+  .footer__legal a{font-size:12px;color:var(--medium);transition:color .2s}
+  .footer__legal a:hover{color:var(--light)}
+
+  @media(max-width:1024px){
+    .hero__content{padding:48px 32px;padding-top:120px}
+    .empresa-card--side{width:260px;height:360px}
+    .empresa-card--center{width:320px;height:420px}
+    .empresa-card--center .empresa-card__name{font-size:26px}
+    .industrias__grid{grid-template-columns:repeat(2,1fr)}
+    .cadeia__grid{grid-template-columns:repeat(2,1fr)}
+    .numeros__grid{grid-template-columns:repeat(2,1fr);gap:40px}
+    .footer__grid{grid-template-columns:repeat(2,1fr)}
+    .footer{padding:48px 32px}
+    .depoimentos__track-wrapper{margin:0 -80px;padding:0 80px}
+    .depoimento-card{min-width:320px;max-width:320px}
+  }
+  @media(max-width:768px){
+    .header__nav,.header__icons{display:none}
+    .header__menu-toggle{display:block}
+    .header{padding:14px 20px}
+    .hero{min-height:500px}
+    .hero__content{padding:32px 20px;padding-top:100px}
+    .hero__title{font-size:28px}
+    .hero__subtitle{font-size:14px}
+    .hero__ctas{flex-direction:column}
+    .hero__ctas a{text-align:center}
+    .empresas{padding:48px 0}
+    .empresas__title{font-size:22px;padding:0 20px}
+    .empresas__carousel{flex-direction:column;gap:12px;align-items:center}
+    .empresa-card--side,.empresa-card--center{width:90%;max-width:360px;height:300px;opacity:1}
+    .empresa-card--center .empresa-card__name,.empresa-card--side .empresa-card__name{font-size:22px}
+    .industrias{padding:48px 0}
+    .industrias__title{font-size:22px}
+    .industrias__grid{grid-template-columns:1fr}
+    .industrias__chips{padding:0 20px}
+    .cadeia{padding:48px 0}
+    .cadeia__title{font-size:22px;padding:0 20px}
+    .cadeia__grid{grid-template-columns:1fr}
+    .numeros{padding:48px 0}
+    .numeros__title{font-size:22px;padding:0 20px}
+    .numeros__grid{grid-template-columns:1fr 1fr;gap:32px}
+    .numero-item__value{font-size:40px}
+    .depoimentos{padding:48px 0}
+    .depoimentos__title{font-size:22px;padding:0 20px}
+    .depoimentos__track-wrapper{margin:0 -40px;padding:0 40px}
+    .depoimento-card{min-width:280px;max-width:280px;padding:24px 20px}
+    .faq{padding:48px 0}
+    .faq__inner{padding:0 20px}
+    .faq__title{font-size:22px}
+    .cta-contato{padding:48px 0}
+    .cta-contato__inner{padding:0 20px}
+    .cta-contato__title{font-size:26px}
+    .cta-contato__subtitle{font-size:16px}
+    .footer{padding:32px 20px}
+    .footer__grid{grid-template-columns:1fr;gap:32px}
+    .footer__bottom{flex-direction:column;align-items:flex-start}
+  }
+</style>
+
+<script>
+  // Header hide/show
+  let lastY = window.scrollY;
+  const header = document.getElementById('header')!;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    header.classList.toggle('header--hidden', y > lastY && y > 100);
+    lastY = y;
+  }, { passive: true });
+
+  // Mobile nav
+  document.getElementById('menuOpen')!.addEventListener('click', () => document.getElementById('mobileNav')!.classList.add('active'));
+  document.getElementById('menuClose')!.addEventListener('click', () => document.getElementById('mobileNav')!.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav a').forEach(a => a.addEventListener('click', () => document.getElementById('mobileNav')!.classList.remove('active')));
+
+  // Chips
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('chip--active'));
+      chip.classList.add('chip--active');
+    });
+  });
+
+  // FAQ
+  document.querySelectorAll('.faq-item__header').forEach(btn => {
+    btn.addEventListener('click', () => btn.parentElement!.classList.toggle('active'));
+  });
+
+  // Empresas carousel
+  const empresasData = [
+    { name: 'IBAR Refratários', img: 'https://images.unsplash.com/photo-1513828583688-c52646db42da?w=600' },
+    { name: 'IBAR Nordeste', img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?w=600' },
+    { name: 'IBAR Poá', img: 'https://images.unsplash.com/photo-1581091226033-d5c48150dbaa?w=600' },
+    { name: 'Nutec IBAR', img: 'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=600' },
+    { name: 'Global Service', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600' },
+    { name: 'Biolã', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600' },
+  ];
+  const pages = [[5,0,1],[1,2,3],[3,4,5]];
+  let currentPage = 0, paused = false;
+  const cards = document.querySelectorAll('.empresa-card');
+  const dots = document.querySelectorAll('[data-dot]');
+
+  function updateCarousel() {
+    const page = pages[currentPage];
+    cards.forEach((card, i) => {
+      const e = empresasData[page[i]];
+      card.querySelector('.empresa-card__name')!.textContent = e.name;
+      (card.querySelector('.empresa-card__bg') as HTMLElement).style.backgroundImage = `url(${e.img})`;
+    });
+    dots.forEach(dot => {
+      const idx = parseInt(dot.getAttribute('data-dot')!);
+      dot.className = idx === currentPage ? 'dot dot--active' : 'dot dot--inactive';
+    });
+  }
+
+  setInterval(() => { if (!paused) { currentPage = (currentPage + 1) % pages.length; updateCarousel(); } }, 3500);
+  document.getElementById('empresasPause')!.addEventListener('click', function(this: HTMLElement) { paused = !paused; this.textContent = paused ? '\u25B6' : '\u2758\u2758'; });
+  dots.forEach(dot => dot.addEventListener('click', () => { currentPage = parseInt(dot.getAttribute('data-dot')!); updateCarousel(); }));
+
+  // Testimonials auto-scroll
+  const track = document.querySelector('.depoimentos__track') as HTMLElement;
+  if (track) {
+    let scrollAmt = 0;
+    let interval = setInterval(() => { scrollAmt += 404; if (scrollAmt >= track.scrollWidth - track.clientWidth) scrollAmt = 0; track.scrollTo({ left: scrollAmt, behavior: 'smooth' }); }, 4000);
+    track.addEventListener('mouseenter', () => clearInterval(interval));
+    track.addEventListener('mouseleave', () => { interval = setInterval(() => { scrollAmt += 404; if (scrollAmt >= track.scrollWidth - track.clientWidth) scrollAmt = 0; track.scrollTo({ left: scrollAmt, behavior: 'smooth' }); }, 4000); });
+  }
+</script>

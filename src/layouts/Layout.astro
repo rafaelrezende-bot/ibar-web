@@ -1,0 +1,88 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = 'O Grupo IBAR reúne seis empresas especializadas com mais de 50 anos de atuação em refratários, minerais industriais e soluções técnicas.' } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <slot />
+</body>
+</html>
+
+<style is:global>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --darkest: #181212;
+    --dark: #514C4C;
+    --medium: #969393;
+    --light: #D8D8D8;
+    --lightest: #F6F5F5;
+    --white: #FFFFFF;
+    --red: #CD1F1F;
+    --max-width: 1424px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--darkest);
+    background: var(--white);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img { max-width: 100%; display: block; }
+  a { text-decoration: none; color: inherit; }
+  button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+  .container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding-left: 64px;
+    padding-right: 64px;
+  }
+
+  .btn-primary {
+    background: var(--white);
+    color: var(--darkest);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 16px 24px;
+    border-radius: 8px;
+    transition: opacity 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { opacity: 0.9; }
+
+  .btn-secondary {
+    border: 1px solid var(--white);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 16px 24px;
+    border-radius: 8px;
+    transition: background 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { background: var(--white); color: var(--darkest); }
+
+  @media (max-width: 1024px) {
+    .container { padding-left: 32px; padding-right: 32px; }
+  }
+  @media (max-width: 768px) {
+    .container { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
